@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1110954686917884533
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 831865723787912381, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4789548814206109747, guid: c9a3e6d235d764bbaa4020adcdb02ad8, type: 3}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345163431220197867, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567111365491138406, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2784588437047556075, guid: c9a3e6d235d764bbaa4020adcdb02ad8, type: 3}
+    - target: {fileID: 6864619501170309829, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
+      propertyPath: m_Name
+      value: Wall2TilesSlime2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4ab78cbe2c83b4968aa79708ebbe3ba1, type: 3}
