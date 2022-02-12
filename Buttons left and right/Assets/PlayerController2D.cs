@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
@@ -8,39 +7,26 @@ public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
     private const float MOVING_RATE = 1f;
-    private const float CHANGE_DIRECTION_RATE = MOVING_RATE / 4;
     private float timeLeftToMove;
-    private float timeLeftToChangeDirection;
-    private bool isInputAllowed;
-    private Direction availableDirection;
     private Direction selectedDirection;
+    private bool undoLastMovement;
     
     // Just for debugging
-    [SerializeField] private Text availableDirectionText;
     [SerializeField] private Text selectedDirectionText;
 
     private enum Direction
     {
-        Up,
-        Left,
-        Down,
+        None,
         Right,
-        None
+        Down,
+        Left,
+        Up
     }
 
     private void Awake()
     {
-        isInputAllowed = true;
         timeLeftToMove = MOVING_RATE;
-        SetAvailableDirection(Direction.Up);
         SetSelectedDirection(Direction.None);
-    }
-
-    private void SetAvailableDirection(Direction direction)
-    {
-        availableDirection = direction;
-        timeLeftToChangeDirection = CHANGE_DIRECTION_RATE;
-        availableDirectionText.text = "Available direction: " + availableDirection;
     }
 
     private void SetSelectedDirection(Direction direction)
@@ -51,48 +37,42 @@ public class PlayerController2D : MonoBehaviour
     
     private void Update()
     {
-        if (isInputAllowed)
-        {
-            HandleInput();
-        }
-
-        timeLeftToChangeDirection -= Time.deltaTime;
-        if (timeLeftToChangeDirection < 0)
-        {
-            SetAvailableDirection(GetNextAvailableDirection());
-        }
+        HandleInput();
 
         timeLeftToMove -= Time.deltaTime;
         if (timeLeftToMove < 0)
         {
             if (selectedDirection != Direction.None)
             {
-                Move();
+                TryMove();
             }
             timeLeftToMove = MOVING_RATE;
-            selectedDirection = Direction.None;
-            isInputAllowed = true;
         }
     }
 
-    private void Move()
+    private void TryMove()
     {
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement();
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
-        if (!obstacles)
+        if (obstacles)
+        {
+            SetSelectedDirection(Direction.None);
+        }
+        else
         {
             transform.Translate(targetMovement);
         }
     }
 
-    private Direction GetNextAvailableDirection() => availableDirection switch
+    private Direction GetNextAvailableDirection() => selectedDirection switch
     {
-        Direction.Up => Direction.Left,
-        Direction.Left => Direction.Down,
-        Direction.Down => Direction.Right,
-        Direction.Right => Direction.Up,
-        _ => throw new ArgumentOutOfRangeException(nameof(availableDirection), $"Not expected direction value: {availableDirection}"),
+        Direction.None => Direction.Right,
+        Direction.Right => Direction.Down,
+        Direction.Down => Direction.Left,
+        Direction.Left => Direction.Up,
+        Direction.Up => Direction.Right,
+        _ => throw new ArgumentOutOfRangeException(nameof(selectedDirection), $"Not expected direction value: {selectedDirection}"),
     };
     
     private Vector3 GetTargetMovement() => selectedDirection switch
@@ -108,12 +88,18 @@ public class PlayerController2D : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            SetSelectedDirection(availableDirection);
-            isInputAllowed = false;
+            SetSelectedDirection(GetNextAvailableDirection());
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            // TODO - Undo last movement
+            if (selectedDirection == Direction.None)
+            {
+                // UNDO last movement
+            }
+            else
+            {
+                SetSelectedDirection(Direction.None);
+            }
         }
     }
 }
