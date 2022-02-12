@@ -22,6 +22,13 @@
 # Visual Studio cache directory
 .vs/
 
+# Jetbrain Rider Cache
+.idea/
+Assets/Plugins/Editor/JetBrains*
+
+# Visual Studio Code
+.vscode/
+
 # Gradle cache directory
 .gradle/
 
@@ -57,4 +64,3 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
