@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
@@ -61,7 +62,27 @@ public class PlayerController2D : MonoBehaviour
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
         if (!obstacles)
         {
-            transform.Translate(targetMovement);
+            Move(targetMovement);
+        }
+    }
+
+    private void Move(Vector3 targetMovement)
+    {
+        StartCoroutine(SmoothMove(targetMovement));
+    }
+
+    IEnumerator SmoothMove(Vector3 targetMovement)
+    {
+        var duration = 0.1f;
+        var startTime = Time.time;
+        var startPos = transform.position;
+        var interpolationPoint = 0f;
+        while (interpolationPoint < 1f)
+        {
+            interpolationPoint = (Time.time - startTime) / duration;
+            var move = Mathf.Lerp(0, 1, interpolationPoint);
+            transform.position = startPos + move * targetMovement;
+            yield return null;
         }
     }
 
