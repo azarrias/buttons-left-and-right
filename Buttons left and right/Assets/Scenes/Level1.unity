@@ -10753,10 +10753,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 555718437041979749, guid: 7a0a44a58af96406b98a966e9339df32, type: 3}
-      propertyPath: selectedDirectionText
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7145934540306272055, guid: 7a0a44a58af96406b98a966e9339df32, type: 3}
       propertyPath: m_Name
       value: Player
