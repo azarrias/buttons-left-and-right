@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
     private Direction selectedDirection;
-    private bool undoLastMovement;
+    private Direction[] movementHistory;
+
+    public delegate void SelectDirection(Direction direction);
+    public event SelectDirection OnSelectDirection;
     
     // Music stuff, doesn't belong here
     private bool musicPlaying;
@@ -18,10 +20,7 @@ public class PlayerController2D : MonoBehaviour
     private float movingRate;
     private int currentBeat;
     
-    // Just for debugging
-    [SerializeField] private Text selectedDirectionText;
-
-    private enum Direction
+    public enum Direction
     {
         None,
         Right,
@@ -38,7 +37,7 @@ public class PlayerController2D : MonoBehaviour
     private void SetSelectedDirection(Direction direction)
     {
         selectedDirection = direction;
-        selectedDirectionText.text = "Selected direction: " + selectedDirection;
+        OnSelectDirection?.Invoke(selectedDirection);
     }
     
     private void Update()
@@ -58,7 +57,7 @@ public class PlayerController2D : MonoBehaviour
     private void TryMove()
     {
         var currentPosition = transform.position;
-        var targetMovement = GetTargetMovement();
+        var targetMovement = GetTargetDirection();
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
         if (!obstacles)
         {
@@ -68,11 +67,13 @@ public class PlayerController2D : MonoBehaviour
 
     private void Move(Vector3 targetMovement)
     {
+        
         StartCoroutine(SmoothMove(targetMovement));
     }
 
     IEnumerator SmoothMove(Vector3 targetMovement)
     {
+        // TODO - Replace magic number with the duration of the moving animation
         var duration = 0.1f;
         var startTime = Time.time;
         var startPos = transform.position;
@@ -96,7 +97,7 @@ public class PlayerController2D : MonoBehaviour
         _ => throw new ArgumentOutOfRangeException(nameof(selectedDirection), $"Not expected direction value: {selectedDirection}"),
     };
     
-    private Vector3 GetTargetMovement() => selectedDirection switch
+    private Vector3 GetTargetDirection() => selectedDirection switch
     {
         Direction.Up => Vector3.up,
         Direction.Left => Vector3.left,
