@@ -98,3 +98,6 @@ MonoBehaviour:
   obstaclesLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  musicClip: {fileID: 8300000, guid: a05ecfc981a51b747b05a3402d289b76, type: 3}
+  musicBpm: 70
+  selectedDirectionText: {fileID: 0}

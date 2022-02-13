@@ -6,10 +6,16 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
-    private const float MOVING_RATE = 1f;
-    private float timeLeftToMove;
     private Direction selectedDirection;
     private bool undoLastMovement;
+    
+    // Music stuff, doesn't belong here
+    private bool musicPlaying;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private float musicStartingOffset;
+    [SerializeField] private float musicBpm;
+    private float movingRate;
+    private int currentBeat;
     
     // Just for debugging
     [SerializeField] private Text selectedDirectionText;
@@ -25,8 +31,7 @@ public class PlayerController2D : MonoBehaviour
 
     private void Awake()
     {
-        timeLeftToMove = MOVING_RATE;
-        SetSelectedDirection(Direction.None);
+        movingRate = 60 / musicBpm;
     }
 
     private void SetSelectedDirection(Direction direction)
@@ -38,15 +43,14 @@ public class PlayerController2D : MonoBehaviour
     private void Update()
     {
         HandleInput();
-
-        timeLeftToMove -= Time.deltaTime;
-        if (timeLeftToMove < 0)
+        
+        if (audioSource.time > movingRate * currentBeat + musicStartingOffset)
         {
             if (selectedDirection != Direction.None)
             {
                 TryMove();
             }
-            timeLeftToMove = MOVING_RATE;
+            currentBeat++;
         }
     }
 
@@ -55,11 +59,7 @@ public class PlayerController2D : MonoBehaviour
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement();
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
-        if (obstacles)
-        {
-            SetSelectedDirection(Direction.None);
-        }
-        else
+        if (!obstacles)
         {
             transform.Translate(targetMovement);
         }
@@ -86,6 +86,18 @@ public class PlayerController2D : MonoBehaviour
 
     private void HandleInput()
     {
+        if (!musicPlaying)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartMusic();
+            }
+            else
+            {
+                return;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             SetSelectedDirection(GetNextAvailableDirection());
@@ -101,5 +113,13 @@ public class PlayerController2D : MonoBehaviour
                 SetSelectedDirection(Direction.None);
             }
         }
+    }
+
+    private void StartMusic()
+    {
+        Debug.Log("Start music");
+        musicPlaying = true;
+        audioSource.Play();
+        SetSelectedDirection(Direction.None);
     }
 }
