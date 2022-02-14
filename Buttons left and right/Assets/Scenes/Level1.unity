@@ -10814,10 +10814,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 501905779}
-    - target: {fileID: 6116542274573987909, guid: f692632f573af4417949de52505842f2, type: 3}
-      propertyPath: direction
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 9007013497150515789, guid: f692632f573af4417949de52505842f2, type: 3}
       propertyPath: m_Name
       value: HUD

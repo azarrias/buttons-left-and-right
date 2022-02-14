@@ -12,8 +12,10 @@ public class PlayerController2D : MonoBehaviour
     private bool undoLastMovement;
 
     public delegate void SelectDirection(Direction direction);
+    public delegate void SelectUndo(bool enable);
 
     public event SelectDirection OnSelectDirection;
+    public event SelectUndo OnSelectUndo;
 
     // Music stuff, doesn't belong here
     private bool musicPlaying;
@@ -162,11 +164,13 @@ public class PlayerController2D : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            OnSelectUndo?.Invoke(true);
             SetSelectedDirection(Direction.None);
             undoLastMovement = true;
         }
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
+            OnSelectUndo?.Invoke(false);
             undoLastMovement = false;
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
