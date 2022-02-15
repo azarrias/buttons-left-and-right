@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
+    [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private MusicManager musicManager;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
@@ -36,7 +39,11 @@ public class PlayerController2D : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_ANDROID || UNITY_IOS
+        HandleInputMobile();
+#else
         HandleInput();
+#endif
     }
 
     private void SetSelectedDirection(Direction direction)
@@ -128,6 +135,11 @@ public class PlayerController2D : MonoBehaviour
             transform.position = startPos + move * targetMovement;
             yield return null;
         }
+        var goal = Physics2D.Linecast(transform.position, transform.position, goalLayerMask);
+        if (goal)
+        {
+            SceneManager.LoadScene(1);
+        }
     }
 
     private Direction GetNextAvailableDirection() => selectedDirection switch
@@ -156,6 +168,18 @@ public class PlayerController2D : MonoBehaviour
             TryMove();
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            SetSelectedDirection(GetNextAvailableDirection());
+        }
+    }
+
+    private void HandleInputMobile()
+    {
+        if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x < Screen.width / 2f))
+        {
+            TryMove();
+        }
+        else if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x >= Screen.width / 2f))
         {
             SetSelectedDirection(GetNextAvailableDirection());
         }
