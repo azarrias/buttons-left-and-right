@@ -7,6 +7,7 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
+    [SerializeField] private MusicManager musicManager;
     private Direction selectedDirection;
     private readonly Stack<Direction> movementStack = new Stack<Direction>();
     private bool undoLastMovement;
@@ -16,14 +17,6 @@ public class PlayerController2D : MonoBehaviour
 
     public event SelectDirection OnSelectDirection;
     public event SelectUndo OnSelectUndo;
-
-    // Music stuff, doesn't belong here
-    private bool musicPlaying;
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private float musicStartingOffset;
-    [SerializeField] private float musicBpm;
-    private float movingRate;
-    private int currentBeat;
 
     public enum Direction
     {
@@ -36,20 +29,14 @@ public class PlayerController2D : MonoBehaviour
 
     private void Awake()
     {
-        movingRate = 60 / musicBpm;
-    }
-
-    private void SetSelectedDirection(Direction direction)
-    {
-        selectedDirection = direction;
-        OnSelectDirection?.Invoke(selectedDirection);
+        SetSelectedDirection(Direction.None);
     }
 
     private void Update()
     {
         HandleInput();
 
-        if (audioSource.time > movingRate * currentBeat + musicStartingOffset)
+        /*if (musicManager.AudioSource.time > movingRate * currentBeat + musicStartingOffset)
         {
             if (selectedDirection != Direction.None)
             {
@@ -61,9 +48,15 @@ public class PlayerController2D : MonoBehaviour
             }
 
             currentBeat++;
-        }
+        }*/
     }
 
+    private void SetSelectedDirection(Direction direction)
+    {
+        selectedDirection = direction;
+        OnSelectDirection?.Invoke(selectedDirection);
+    }
+    
     private Direction GetOppositeDirection(Direction direction) => direction switch
     {
         Direction.Right => Direction.Left,
@@ -150,40 +143,16 @@ public class PlayerController2D : MonoBehaviour
 
     private void HandleInput()
     {
-        if (!musicPlaying)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                StartMusic();
-            }
-            else
-            {
-                return;
-            }
-        }
-
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            musicManager.DistanceToClosestBeat();
             OnSelectUndo?.Invoke(true);
             SetSelectedDirection(Direction.None);
             undoLastMovement = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            OnSelectUndo?.Invoke(false);
-            undoLastMovement = false;
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             SetSelectedDirection(GetNextAvailableDirection());
         }
-    }
-
-    private void StartMusic()
-    {
-        Debug.Log("Start music");
-        musicPlaying = true;
-        audioSource.Play();
-        SetSelectedDirection(Direction.None);
     }
 }
