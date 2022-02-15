@@ -8,6 +8,8 @@ public class PlayerController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask obstaclesLayerMask;
     [SerializeField] private MusicManager musicManager;
+    [SerializeField] private float greatThreshold;
+    [SerializeField] private float okThreshold;
     private Direction selectedDirection;
     private readonly Stack<Direction> movementStack = new Stack<Direction>();
     private bool undoLastMovement;
@@ -35,20 +37,6 @@ public class PlayerController2D : MonoBehaviour
     private void Update()
     {
         HandleInput();
-
-        /*if (musicManager.AudioSource.time > movingRate * currentBeat + musicStartingOffset)
-        {
-            if (selectedDirection != Direction.None)
-            {
-                TryMove();
-            }
-            else if (undoLastMovement)
-            {
-                TryUndo();
-            }
-
-            currentBeat++;
-        }*/
     }
 
     private void SetSelectedDirection(Direction direction)
@@ -68,6 +56,26 @@ public class PlayerController2D : MonoBehaviour
 
     private void TryMove()
     {
+        var distance = musicManager.GetDistanceToClosestBeatNormalized();
+        if (distance < greatThreshold)
+        {
+            Debug.Log("GREAT!!!");
+        }
+        else if (distance < okThreshold)
+        {
+            Debug.Log("OK");
+        }
+        else
+        {
+            Debug.Log("KO");
+            return;
+        }
+
+        if (selectedDirection == Direction.None)
+        {
+            return;
+        }
+        
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement(selectedDirection);
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
@@ -145,10 +153,7 @@ public class PlayerController2D : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            musicManager.DistanceToClosestBeat();
-            OnSelectUndo?.Invoke(true);
-            SetSelectedDirection(Direction.None);
-            undoLastMovement = true;
+            TryMove();
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {

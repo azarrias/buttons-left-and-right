@@ -1,10 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    // Music stuff, doesn't belong here
     private bool musicPlaying;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private float startingOffset;
@@ -20,7 +20,7 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
-        beatPeriod = 60 / bpm;
+        beatPeriod = 60f / bpm;
         StartMusic();
     }
     
@@ -30,10 +30,10 @@ public class MusicManager : MonoBehaviour
         {
             currentBeat++;
         }
-
+        
         double THRESHOLD = 0.1f;
-        if (audioSource.time > beatPeriod * currentBeat + startingOffset - THRESHOLD &&
-            audioSource.time < beatPeriod * currentBeat + startingOffset + THRESHOLD)
+        var distance = GetDistanceToClosestBeatNormalized();
+        if (distance < THRESHOLD)
         {
             dotSpriteRenderer.color = Color.red;
         }
@@ -43,23 +43,21 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    public float GetBeatProgressNormalized()
-    {
-        var progress = beatPeriod * (currentBeat + 1) + startingOffset - audioSource.time;
-        return progress / beatPeriod;
-    }
-
-    public void DistanceToClosestBeat()
+    public float GetDistanceToClosestBeat()
     {
         var distanceToPreviousBeat = Mathf.Abs(beatPeriod * (currentBeat - 1) + startingOffset - audioSource.time);
         var distanceToCurrentBeat = Mathf.Abs(beatPeriod * (currentBeat) + startingOffset - audioSource.time);
-        Debug.Log("distanceToPreviousBeat " + distanceToPreviousBeat + " | distanceToCurrentBeat " + distanceToCurrentBeat);
+        return Math.Min(distanceToCurrentBeat, distanceToPreviousBeat);
+    }
+
+    public float GetDistanceToClosestBeatNormalized()
+    {
+        return GetDistanceToClosestBeat() / beatPeriod;
     }
     
     private void StartMusic()
     {
         Debug.Log("Start music");
-        //musicPlaying = true;
         audioSource.Play();
     }
 }

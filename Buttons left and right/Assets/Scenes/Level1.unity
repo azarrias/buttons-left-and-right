@@ -10875,6 +10875,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
+      propertyPath: okThreshold
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
+      propertyPath: greatThreshold
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: startingOffset
       value: 0.01
       objectReference: {fileID: 0}
