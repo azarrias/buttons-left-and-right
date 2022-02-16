@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MusicManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class MusicManager : MonoBehaviour
     public float BeatPeriod => beatPeriod;
     
     // TODO - For debugging
-    [SerializeField] private SpriteRenderer dotSpriteRenderer;
+    [SerializeField] private Image dotImage;
 
     private void Awake()
     {
@@ -35,11 +36,11 @@ public class MusicManager : MonoBehaviour
         var distance = GetDistanceToClosestBeatNormalized();
         if (distance < THRESHOLD)
         {
-            dotSpriteRenderer.color = Color.red;
+            dotImage.color = Color.red;
         }
         else
         {
-            dotSpriteRenderer.color = Color.white;
+            dotImage.color = Color.white;
         }
     }
 
