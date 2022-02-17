@@ -15,7 +15,8 @@ public class MusicManager : MonoBehaviour
     private int currentBeat;
     private float beatPeriod;
     public float BeatPeriod => beatPeriod;
-    private double musicStartTime;
+    private double musicStartTimestamp;
+    private double musicElapsedTime;
 
     // TODO - For debugging
     [SerializeField] private Image dotImage;
@@ -23,23 +24,18 @@ public class MusicManager : MonoBehaviour
     private void Awake()
     {
         beatPeriod = 60f / bpm;
-        //StartMusic();
-        musicStartTime = AudioSettings.dspTime + 2.0f;
+        ScheduleMusic();
     }
     
     private void Update()
     {
-        if (!musicPlaying)
+        musicElapsedTime = AudioSettings.dspTime - musicStartTimestamp;
+        if (musicElapsedTime <= 0)
         {
-            var time = AudioSettings.dspTime;
-            if (time + 1.0f > musicStartTime)
-            {
-                audioSource.PlayScheduled(musicStartTime);
-                musicPlaying = true;
-            }
+            return;
         }
         
-        if (AudioSettings.dspTime - musicStartTime > beatPeriod * currentBeat + startingOffset)
+        if (musicElapsedTime > beatPeriod * currentBeat + startingOffset)
         {
             currentBeat++;
         }
@@ -58,8 +54,8 @@ public class MusicManager : MonoBehaviour
 
     public float GetDistanceToClosestBeat()
     {
-        var distanceToPreviousBeat = Mathf.Abs(beatPeriod * (currentBeat - 1) + startingOffset - audioSource.time);
-        var distanceToCurrentBeat = Mathf.Abs(beatPeriod * (currentBeat) + startingOffset - audioSource.time);
+        var distanceToPreviousBeat = Mathf.Abs(beatPeriod * (currentBeat - 1) + startingOffset - (float)musicElapsedTime);
+        var distanceToCurrentBeat = Mathf.Abs(beatPeriod * (currentBeat) + startingOffset - (float)musicElapsedTime);
         return Math.Min(distanceToCurrentBeat, distanceToPreviousBeat);
     }
 
@@ -68,9 +64,10 @@ public class MusicManager : MonoBehaviour
         return GetDistanceToClosestBeat() / beatPeriod;
     }
     
-    private void StartMusic()
+    private void ScheduleMusic()
     {
         Debug.Log("Start music");
-        audioSource.Play();
+        musicStartTimestamp = AudioSettings.dspTime + 2.0f;
+        audioSource.PlayScheduled(musicStartTimestamp);
     }
 }
