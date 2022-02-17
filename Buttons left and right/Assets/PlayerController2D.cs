@@ -77,7 +77,7 @@ public class PlayerController2D : MonoBehaviour
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement(selectedDirection);
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
-        if (!obstacles)
+        if (!obstacles && movementQuality != MoveQuality.Ko)
         {
             StartCoroutine(Move(targetMovement));
         }

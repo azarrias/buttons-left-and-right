@@ -15,19 +15,31 @@ public class MusicManager : MonoBehaviour
     private int currentBeat;
     private float beatPeriod;
     public float BeatPeriod => beatPeriod;
-    
+    private double musicStartTime;
+
     // TODO - For debugging
     [SerializeField] private Image dotImage;
 
     private void Awake()
     {
         beatPeriod = 60f / bpm;
-        StartMusic();
+        //StartMusic();
+        musicStartTime = AudioSettings.dspTime + 2.0f;
     }
     
     private void Update()
     {
-        if (audioSource.time > beatPeriod * currentBeat + startingOffset)
+        if (!musicPlaying)
+        {
+            var time = AudioSettings.dspTime;
+            if (time + 1.0f > musicStartTime)
+            {
+                audioSource.PlayScheduled(musicStartTime);
+                musicPlaying = true;
+            }
+        }
+        
+        if (AudioSettings.dspTime - musicStartTime > beatPeriod * currentBeat + startingOffset)
         {
             currentBeat++;
         }

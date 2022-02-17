@@ -11362,6 +11362,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
+      propertyPath: bpm
+      value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: dotImage
       value: 
       objectReference: {fileID: 200787512}
@@ -11375,12 +11379,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: startingOffset
-      value: 0.01
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: dotSpriteRenderer
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8094047491651260861, guid: bb82c21da9656471d94804956af606dc, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1332c4ef8e7524b9b85d9f6a9ca0e89f, type: 3}
     - target: {fileID: 8094047491651260863, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: m_Name
       value: MusicManager
