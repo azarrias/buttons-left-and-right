@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Hud : MonoBehaviour
@@ -13,13 +11,13 @@ public class Hud : MonoBehaviour
     private void OnEnable()
     {
         player.OnSelectDirection += ToggleCursors;
-        //player.OnSelectUndo += ToggleRewind;
+        player.OnTryMove += HighlightTempoCircle;
     }
 
     private void OnDisable()
     {
         player.OnSelectDirection -= ToggleCursors;
-        //player.OnSelectUndo -= ToggleRewind;
+        player.OnTryMove -= HighlightTempoCircle;
     }
 
     private void ToggleCursors(PlayerController2D.Direction direction)
@@ -30,13 +28,17 @@ public class Hud : MonoBehaviour
         }
     }
     
-    private void HighlightCircle(bool enable)
+    private void HighlightTempoCircle(PlayerController2D.MoveQuality moveQuality)
     {
-        // TODO highlight circle, in green if OK, in red if KO
+        var highlightColor = GetTempoCircleHighlightColor(moveQuality);
+        tempoCircle.Highlight(highlightColor);
     }
 
-    private void Update()
+    private Color GetTempoCircleHighlightColor(PlayerController2D.MoveQuality moveQuality) => moveQuality switch
     {
-
-    }
+        PlayerController2D.MoveQuality.Ace => Color.magenta,
+        PlayerController2D.MoveQuality.Ok => Color.green,
+        PlayerController2D.MoveQuality.Ko => Color.red,
+        _ => throw new ArgumentOutOfRangeException(nameof(moveQuality), $"Not expected moveQuality value: {moveQuality}")
+    };
 }

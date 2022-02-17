@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,14 +13,12 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
     private Direction selectedDirection;
-    private readonly Stack<Direction> movementStack = new Stack<Direction>();
-    private bool undoLastMovement;
 
-    public delegate void SelectDirection(Direction direction);
-    public delegate void SelectUndo(bool enable);
+    public delegate void SelectDirectionDelegate(Direction direction);
+    public delegate void TryMoveDelegate(MoveQuality moveQuality);
 
-    public event SelectDirection OnSelectDirection;
-    public event SelectUndo OnSelectUndo;
+    public event SelectDirectionDelegate OnSelectDirection;
+    public event TryMoveDelegate OnTryMove;
 
     public enum Direction
     {
@@ -30,6 +27,13 @@ public class PlayerController2D : MonoBehaviour
         Down,
         Left,
         Up
+    }
+
+    public enum MoveQuality
+    {
+        Ace,
+        Ok,
+        Ko
     }
 
     private void Awake()
@@ -63,65 +67,33 @@ public class PlayerController2D : MonoBehaviour
 
     private void TryMove()
     {
-        var distance = musicManager.GetDistanceToClosestBeatNormalized();
-        if (distance < greatThreshold)
-        {
-            Debug.Log("GREAT!!!");
-        }
-        else if (distance < okThreshold)
-        {
-            Debug.Log("OK");
-        }
-        else
-        {
-            Debug.Log("KO");
-            return;
-        }
-
         if (selectedDirection == Direction.None)
         {
             return;
         }
         
+        var movementQuality = GetMovementQuality();
+        OnTryMove?.Invoke(movementQuality);
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement(selectedDirection);
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
         if (!obstacles)
         {
-            Move(targetMovement);
+            StartCoroutine(Move(targetMovement));
         }
     }
 
-    private void Move(Vector3 movement)
+    private MoveQuality GetMovementQuality()
     {
-        movementStack.Push(selectedDirection);
-        StartCoroutine(SmoothMove(movement));
-    }
-    
-    private void TryUndo()
-    {
-        if (movementStack.Count == 0)
+        var distance = musicManager.GetDistanceToClosestBeatNormalized();
+        if (distance < greatThreshold)
         {
-            return;
+            return MoveQuality.Ace;
         }
-
-        var currentPosition = transform.position;
-        var direction = movementStack.Pop();
-        var oppositeDirection = GetOppositeDirection(direction);
-        var targetMovement = GetTargetMovement(oppositeDirection);
-        var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
-        if (!obstacles)
-        {
-            Undo(targetMovement);
-        }
+        return distance < okThreshold ? MoveQuality.Ok : MoveQuality.Ko;
     }
 
-    private void Undo(Vector3 movement)
-    {
-        StartCoroutine(SmoothMove(movement));
-    }
-
-    IEnumerator SmoothMove(Vector3 targetMovement)
+    IEnumerator Move(Vector3 targetMovement)
     {
         // TODO - Replace magic number with the duration of the moving animation
         var duration = 0.1f;

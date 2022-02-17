@@ -1,11 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Circle : MonoBehaviour
 {
-    private void Update()
+    [SerializeField] private Image highlightImage;
+    
+    public void Highlight(Color highlightColor)
     {
-
+        highlightImage.gameObject.SetActive(true);
+        highlightImage.color = highlightColor;
     }
 }
