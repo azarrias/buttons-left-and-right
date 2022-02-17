@@ -11082,10 +11082,6 @@ PrefabInstance:
       propertyPath: musicManager
       value: 
       objectReference: {fileID: 1286856670}
-    - target: {fileID: 555718437041979749, guid: 7a0a44a58af96406b98a966e9339df32, type: 3}
-      propertyPath: goalLayerMask.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
     - target: {fileID: 4604316374407278181, guid: 7a0a44a58af96406b98a966e9339df32, type: 3}
       propertyPath: m_FlipX
       value: 0

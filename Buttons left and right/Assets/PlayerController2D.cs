@@ -7,12 +7,18 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController2D : MonoBehaviour
 {
+    private const string TURN_BACK_PARAMETER = "TurnBack";
+    private const string TURN_FRONT_PARAMETER = "TurnFront";
+    
     [SerializeField] private LayerMask obstaclesLayerMask;
     [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private MusicManager musicManager;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
     private Direction selectedDirection;
+    private bool facingDown = true;
 
     public delegate void SelectDirectionDelegate(Direction direction);
     public delegate void TryMoveDelegate(MoveQuality moveQuality);
@@ -79,7 +85,24 @@ public class PlayerController2D : MonoBehaviour
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
         if (!obstacles && movementQuality != MoveQuality.Ko)
         {
+            AdjustOrientation();
             StartCoroutine(Move(targetMovement));
+        }
+    }
+
+    private void AdjustOrientation()
+    {
+        if (selectedDirection == Direction.Left && !spriteRenderer.flipX
+            || selectedDirection == Direction.Right && spriteRenderer.flipX)
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
+
+        if (selectedDirection == Direction.Down && !facingDown 
+            || selectedDirection == Direction.Up && facingDown)
+        {
+            animator.SetTrigger(facingDown ? TURN_BACK_PARAMETER : TURN_FRONT_PARAMETER);
+            facingDown = !facingDown;
         }
     }
 
