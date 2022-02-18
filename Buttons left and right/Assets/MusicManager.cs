@@ -18,50 +18,58 @@ public class MusicManager : MonoBehaviour
     private double musicStartTimestamp;
     private double musicElapsedTime;
 
+    private float lastBeatSample;
+    private float nextBeatSample;
+    private float samplePeriod;
+    private float sampleOffset;
+    private float currentSample;
+    private int audioSourceClipFrequency => audioSource.clip.frequency;
+    
     // TODO - For debugging
     [SerializeField] private Image dotImage;
 
     private void Awake()
     {
         beatPeriod = 60f / bpm;
+        samplePeriod = beatPeriod * audioSourceClipFrequency;
+        sampleOffset = startingOffset * audioSourceClipFrequency;
         ScheduleMusic();
+        lastBeatSample = 0f;
+        nextBeatSample = (float)musicStartTimestamp * audioSourceClipFrequency;
     }
     
     private void Update()
     {
-        musicElapsedTime = AudioSettings.dspTime - musicStartTimestamp;
-        if (musicElapsedTime <= 0)
+        if (audioSource.isPlaying)
         {
-            return;
+            currentSample = (float)AudioSettings.dspTime * audioSourceClipFrequency;
+
+            if (currentSample >= nextBeatSample + sampleOffset)
+            {
+                StartCoroutine(PaintDebugCircle(0.2f));
+                lastBeatSample = nextBeatSample;
+                nextBeatSample += samplePeriod;
+            }
         }
-        
-        if (musicElapsedTime > beatPeriod * currentBeat + startingOffset)
-        {
-            currentBeat++;
-        }
-        
-        double THRESHOLD = 0.1f;
-        var distance = GetDistanceToClosestBeatNormalized();
-        if (distance < THRESHOLD)
-        {
-            dotImage.color = Color.red;
-        }
-        else
-        {
-            dotImage.color = Color.white;
-        }
+    }
+
+    IEnumerator PaintDebugCircle(float duration)
+    {
+        dotImage.color = Color.red;
+        yield return new WaitForSeconds(duration);
+        dotImage.color = Color.white;
     }
 
     public float GetDistanceToClosestBeat()
     {
-        var distanceToPreviousBeat = Mathf.Abs(beatPeriod * (currentBeat - 1) + startingOffset - (float)musicElapsedTime);
-        var distanceToCurrentBeat = Mathf.Abs(beatPeriod * (currentBeat) + startingOffset - (float)musicElapsedTime);
+        var distanceToPreviousBeat = Mathf.Abs(lastBeatSample + sampleOffset - currentSample);
+        var distanceToCurrentBeat = Mathf.Abs(nextBeatSample + sampleOffset - currentSample);
         return Math.Min(distanceToCurrentBeat, distanceToPreviousBeat);
     }
 
     public float GetDistanceToClosestBeatNormalized()
     {
-        return GetDistanceToClosestBeat() / beatPeriod;
+        return GetDistanceToClosestBeat() / samplePeriod;
     }
     
     private void ScheduleMusic()
