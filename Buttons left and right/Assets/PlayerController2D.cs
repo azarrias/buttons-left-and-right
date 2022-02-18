@@ -7,9 +7,11 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController2D : MonoBehaviour
 {
-    private const string TURN_BACK_PARAMETER = "TurnBack";
-    private const string TURN_FRONT_PARAMETER = "TurnFront";
-    
+    private const string MOVE_UP_ANIMATION_PARAMETER = "MoveUp";
+    private const string MOVE_RIGHT_ANIMATION_PARAMETER = "MoveRight";
+    private const string MOVE_DOWN_ANIMATION_PARAMETER = "MoveDown";
+    private const string MOVE_LEFT_ANIMATION_PARAMETER = "MoveLeft";
+
     [SerializeField] private LayerMask obstaclesLayerMask;
     [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private MusicManager musicManager;
@@ -21,6 +23,7 @@ public class PlayerController2D : MonoBehaviour
     private bool facingDown = true;
 
     public delegate void SelectDirectionDelegate(Direction direction);
+
     public delegate void TryMoveDelegate(MoveQuality moveQuality);
 
     public event SelectDirectionDelegate OnSelectDirection;
@@ -61,7 +64,7 @@ public class PlayerController2D : MonoBehaviour
         selectedDirection = direction;
         OnSelectDirection?.Invoke(selectedDirection);
     }
-    
+
     private Direction GetOppositeDirection(Direction direction) => direction switch
     {
         Direction.Right => Direction.Left,
@@ -77,7 +80,7 @@ public class PlayerController2D : MonoBehaviour
         {
             return;
         }
-        
+
         var movementQuality = GetMovementQuality();
         OnTryMove?.Invoke(movementQuality);
         var currentPosition = transform.position;
@@ -92,19 +95,17 @@ public class PlayerController2D : MonoBehaviour
 
     private void AdjustOrientation()
     {
-        if (selectedDirection == Direction.Left && !spriteRenderer.flipX
-            || selectedDirection == Direction.Right && spriteRenderer.flipX)
-        {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        }
-
-        if (selectedDirection == Direction.Down && !facingDown 
-            || selectedDirection == Direction.Up && facingDown)
-        {
-            animator.SetTrigger(facingDown ? TURN_BACK_PARAMETER : TURN_FRONT_PARAMETER);
-            facingDown = !facingDown;
-        }
+        animator.SetTrigger(GetAnimationTrigger());
     }
+
+    private string GetAnimationTrigger() => selectedDirection switch
+    {
+        Direction.Up => MOVE_UP_ANIMATION_PARAMETER,
+        Direction.Right => MOVE_RIGHT_ANIMATION_PARAMETER,
+        Direction.Down => MOVE_DOWN_ANIMATION_PARAMETER,
+        Direction.Left => MOVE_LEFT_ANIMATION_PARAMETER,
+        _ => throw new ArgumentOutOfRangeException(nameof(selectedDirection), $"Not expected direction value: {selectedDirection}")
+    };
 
     private MoveQuality GetMovementQuality()
     {
@@ -119,7 +120,7 @@ public class PlayerController2D : MonoBehaviour
     IEnumerator Move(Vector3 targetMovement)
     {
         // TODO - Replace magic number with the duration of the moving animation
-        var duration = 0.1f;
+        var duration = 0.25f;
         var startTime = Time.time;
         var startPos = transform.position;
         var interpolationPoint = 0f;
