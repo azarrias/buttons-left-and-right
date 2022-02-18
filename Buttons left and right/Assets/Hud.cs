@@ -7,6 +7,8 @@ public class Hud : MonoBehaviour
     [SerializeField] private MusicManager musicManager;
     [SerializeField] private Arrow[] cursors;
     [SerializeField] private Circle tempoCircle;
+
+    private const float TEMPO_CIRCLE_HIGHLIGHT_DURATION = 0.3f;
     
     private void OnEnable()
     {
@@ -31,7 +33,7 @@ public class Hud : MonoBehaviour
     private void HighlightTempoCircle(PlayerController2D.MoveQuality moveQuality)
     {
         var highlightColor = GetTempoCircleHighlightColor(moveQuality);
-        tempoCircle.Highlight(highlightColor);
+        tempoCircle.Highlight(highlightColor, TEMPO_CIRCLE_HIGHLIGHT_DURATION);
     }
 
     private Color GetTempoCircleHighlightColor(PlayerController2D.MoveQuality moveQuality) => moveQuality switch

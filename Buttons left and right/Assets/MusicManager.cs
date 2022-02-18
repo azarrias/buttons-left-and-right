@@ -55,7 +55,7 @@ public class MusicManager : MonoBehaviour
 
     IEnumerator PaintDebugCircle(float duration)
     {
-        dotImage.color = Color.red;
+        dotImage.color = Color.yellow;
         yield return new WaitForSeconds(duration);
         dotImage.color = Color.white;
     }
