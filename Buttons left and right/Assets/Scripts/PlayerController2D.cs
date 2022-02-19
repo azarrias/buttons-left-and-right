@@ -7,6 +7,11 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController2D : CreatureController2D
 {
     [SerializeField] private LayerMask goalLayerMask;
+    
+    public delegate void SelectDirectionDelegate(Direction direction);
+    public delegate void ExecuteMoveDelegate(MoveQuality moveQuality);
+    public event SelectDirectionDelegate OnSelectDirection;
+    public event ExecuteMoveDelegate OnExecuteMove;
 
     protected override void HandleUpdate()
     {
@@ -21,7 +26,7 @@ public class PlayerController2D : CreatureController2D
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            TryMove();
+            ExecuteMove();
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -33,7 +38,7 @@ public class PlayerController2D : CreatureController2D
     {
         if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x < Screen.width / 2f))
         {
-            TryMove();
+            ExecuteMove();
         }
         else if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x >= Screen.width / 2f))
         {
@@ -48,6 +53,28 @@ public class PlayerController2D : CreatureController2D
         if (goal)
         {
             SceneManager.LoadScene(1);
+        }
+    }
+
+    protected override void SetSelectedDirection(Direction direction)
+    {
+        base.SetSelectedDirection(direction);
+        OnSelectDirection?.Invoke(selectedDirection);
+    }
+
+    protected override void ExecuteMove()
+    {
+        if (selectedDirection == Direction.None)
+        {
+            return;
+        }
+
+        var movementQuality = GetMovementQuality();
+        OnExecuteMove?.Invoke(movementQuality);
+
+        if (movementQuality != MoveQuality.Ko)
+        {
+            base.ExecuteMove();
         }
     }
 }

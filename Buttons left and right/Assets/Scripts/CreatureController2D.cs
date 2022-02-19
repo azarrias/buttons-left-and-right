@@ -15,14 +15,7 @@ public abstract class CreatureController2D : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
-    private Direction selectedDirection;
-
-    public delegate void SelectDirectionDelegate(Direction direction);
-
-    public delegate void TryMoveDelegate(MoveQuality moveQuality);
-
-    public event SelectDirectionDelegate OnSelectDirection;
-    public event TryMoveDelegate OnTryMove;
+    protected Direction selectedDirection;
 
     public enum Direction
     {
@@ -52,10 +45,9 @@ public abstract class CreatureController2D : MonoBehaviour
 
     protected abstract void HandleUpdate();
 
-    protected void SetSelectedDirection(Direction direction)
+    protected virtual void SetSelectedDirection(Direction direction)
     {
         selectedDirection = direction;
-        OnSelectDirection?.Invoke(selectedDirection);
     }
 
     private Direction GetOppositeDirection(Direction direction) => direction switch
@@ -67,19 +59,12 @@ public abstract class CreatureController2D : MonoBehaviour
         _ => throw new ArgumentOutOfRangeException(nameof(direction), $"Not expected direction value: {direction}")
     };
 
-    protected void TryMove()
+    protected virtual void ExecuteMove()
     {
-        if (selectedDirection == Direction.None)
-        {
-            return;
-        }
-
-        var movementQuality = GetMovementQuality();
-        OnTryMove?.Invoke(movementQuality);
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement(selectedDirection);
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
-        if (!obstacles && movementQuality != MoveQuality.Ko)
+        if (!obstacles)
         {
             AdjustOrientation();
             StartCoroutine(Move(targetMovement));
@@ -100,7 +85,7 @@ public abstract class CreatureController2D : MonoBehaviour
         _ => throw new ArgumentOutOfRangeException(nameof(selectedDirection), $"Not expected direction value: {selectedDirection}")
     };
 
-    private MoveQuality GetMovementQuality()
+    protected MoveQuality GetMovementQuality()
     {
         var distance = musicManager.GetDistanceToClosestBeatNormalized();
         if (distance < greatThreshold)

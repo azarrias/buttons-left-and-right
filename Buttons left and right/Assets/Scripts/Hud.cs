@@ -13,13 +13,13 @@ public class Hud : MonoBehaviour
     private void OnEnable()
     {
         player.OnSelectDirection += ToggleCursors;
-        player.OnTryMove += HighlightTempoCircle;
+        player.OnExecuteMove += HighlightTempoCircle;
     }
 
     private void OnDisable()
     {
         player.OnSelectDirection -= ToggleCursors;
-        player.OnTryMove -= HighlightTempoCircle;
+        player.OnExecuteMove -= HighlightTempoCircle;
     }
 
     private void ToggleCursors(PlayerController2D.Direction direction)
