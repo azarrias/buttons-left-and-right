@@ -110,5 +110,11 @@ public class PlayerController2D : CreatureController2D
         animator.SetTrigger(DieAnimationParameter);
         musicManager.StopTrackingBeats();
         SetSelectedDirection(Direction.None);
+        Invoke(nameof(RestartLevel), 3f);
+    }
+
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(0);
     }
 }
