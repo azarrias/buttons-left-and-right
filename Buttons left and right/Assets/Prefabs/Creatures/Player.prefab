@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4604316374407278181}
   - component: {fileID: 555718437041979749}
   - component: {fileID: 8747002714901340640}
+  - component: {fileID: 1981344598452599139}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -102,11 +103,11 @@ MonoBehaviour:
   musicManager: {fileID: 0}
   animator: {fileID: 8747002714901340640}
   spriteRenderer: {fileID: 4604316374407278181}
-  greatThreshold: 0.1
-  okThreshold: 0.2
   goalLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  greatThreshold: 0.1
+  okThreshold: 0.2
 --- !u!95 &8747002714901340640
 Animator:
   serializedVersion: 3
@@ -126,3 +127,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!61 &1981344598452599139
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7145934540306272055}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 0.875, y: 0.875}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.6, y: 0.6}
+  m_EdgeRadius: 0

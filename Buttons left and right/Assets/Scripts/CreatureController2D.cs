@@ -8,10 +8,9 @@ public abstract class CreatureController2D : MonoBehaviour
     private const string MOVE_RIGHT_ANIMATION_PARAMETER = "MoveRight";
     private const string MOVE_DOWN_ANIMATION_PARAMETER = "MoveDown";
     private const string MOVE_LEFT_ANIMATION_PARAMETER = "MoveLeft";
-
     [SerializeField] private LayerMask obstaclesLayerMask;
     [SerializeField] protected MusicManager musicManager;
-    [SerializeField] private Animator animator;
+    [SerializeField] protected Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     protected Direction selectedDirection;
 

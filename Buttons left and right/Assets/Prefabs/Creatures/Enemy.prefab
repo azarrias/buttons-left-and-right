@@ -99,11 +99,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 1600
   musicManager: {fileID: 0}
   animator: {fileID: 8747002714901340640}
   spriteRenderer: {fileID: 4604316374407278181}
   player: {fileID: 0}
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!95 &8747002714901340640
 Animator:
   serializedVersion: 3
@@ -147,5 +150,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.6, y: 0.6}
   m_EdgeRadius: 0

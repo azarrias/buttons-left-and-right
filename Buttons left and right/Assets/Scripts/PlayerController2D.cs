@@ -55,7 +55,8 @@ public class PlayerController2D : CreatureController2D
     protected override IEnumerator Move(Vector3 targetMovement)
     {
         yield return StartCoroutine(base.Move(targetMovement));
-        var goal = Physics2D.Linecast(transform.position, transform.position, goalLayerMask);
+        var position = transform.position;
+        var goal = Physics2D.Linecast(position, position, goalLayerMask);
         if (goal)
         {
             SceneManager.LoadScene(1);
@@ -87,5 +88,10 @@ public class PlayerController2D : CreatureController2D
             return MoveQuality.Ace;
         }
         return distance < okThreshold ? MoveQuality.Ok : MoveQuality.Ko;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player Killed!");
     }
 }
