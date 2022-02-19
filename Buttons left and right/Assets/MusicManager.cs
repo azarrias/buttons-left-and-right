@@ -31,7 +31,7 @@ public class MusicManager : MonoBehaviour
     private void Awake()
     {
 #if UNITY_ANDROID || UNITY_STANDALONE_WIN
-        startingOffset += 0.15f;
+        startingOffset += 0.10f;
 #endif
         beatPeriod = 60f / bpm;
         sampleRate = AudioSettings.outputSampleRate;
