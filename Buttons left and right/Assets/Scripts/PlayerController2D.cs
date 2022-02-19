@@ -6,6 +6,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController2D : CreatureController2D
 {
+    private const string DIE_ANIMATION_PARAMETER = "Die";
+    private static readonly int DieAnimationParameter = Animator.StringToHash(DIE_ANIMATION_PARAMETER);
     [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
@@ -16,6 +18,12 @@ public class PlayerController2D : CreatureController2D
     public delegate void ExecuteMoveDelegate(MoveQuality moveQuality);
     public event ExecuteMoveDelegate OnExecuteMove;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        acceptInput = true;
+    }
+    
     protected override void HandleUpdate()
     {
 #if UNITY_ANDROID || UNITY_IOS
@@ -32,7 +40,7 @@ public class PlayerController2D : CreatureController2D
             Application.Quit();
         }
 
-        if (acceptInput)
+        if (!acceptInput)
         {
             return;
         }
@@ -98,7 +106,8 @@ public class PlayerController2D : CreatureController2D
 
     public void Die()
     {
-        acceptInput = true;
+        acceptInput = false;
+        animator.SetTrigger(DieAnimationParameter);
         musicManager.StopTrackingBeats();
         SetSelectedDirection(Direction.None);
     }

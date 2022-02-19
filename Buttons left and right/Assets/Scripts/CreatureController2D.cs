@@ -31,7 +31,7 @@ public abstract class CreatureController2D : MonoBehaviour
         Ko
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         SetSelectedDirection(Direction.None);
     }
