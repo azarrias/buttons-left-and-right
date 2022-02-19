@@ -11379,6 +11379,10 @@ PrefabInstance:
       propertyPath: musicManager
       value: 
       objectReference: {fileID: 1286856670}
+    - target: {fileID: 8394944341189328647, guid: b4352910ae4254deb830fe4e2a41d981, type: 3}
+      propertyPath: obstaclesLayerMask.m_Bits
+      value: 5696
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b4352910ae4254deb830fe4e2a41d981, type: 3}
 --- !u!1001 &2086724367

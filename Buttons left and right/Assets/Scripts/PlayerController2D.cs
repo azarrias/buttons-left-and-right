@@ -9,6 +9,7 @@ public class PlayerController2D : CreatureController2D
     [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
+    private bool acceptInput;
     
     public delegate void SelectDirectionDelegate(Direction direction);
     public event SelectDirectionDelegate OnSelectDirection;
@@ -29,6 +30,11 @@ public class PlayerController2D : CreatureController2D
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
+        }
+
+        if (acceptInput)
+        {
+            return;
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -79,8 +85,8 @@ public class PlayerController2D : CreatureController2D
             base.ExecuteMove();
         }
     }
-    
-    protected MoveQuality GetMovementQuality()
+
+    private MoveQuality GetMovementQuality()
     {
         var distance = musicManager.GetDistanceToClosestBeatNormalized();
         if (distance < greatThreshold)
@@ -92,6 +98,8 @@ public class PlayerController2D : CreatureController2D
 
     public void Die()
     {
-        Debug.Log("Player Killed!");
+        acceptInput = true;
+        musicManager.StopTrackingBeats();
+        SetSelectedDirection(Direction.None);
     }
 }

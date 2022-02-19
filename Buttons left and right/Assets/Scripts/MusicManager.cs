@@ -28,6 +28,7 @@ public class MusicManager : MonoBehaviour
     private float sampleOffset;
     private float currentSample;
     private int sampleRate;
+    private bool trackingBeats;
 
     // TODO - For debugging
     [SerializeField] private Image dotImage;
@@ -48,7 +49,7 @@ public class MusicManager : MonoBehaviour
     
     private void Update()
     {
-        if (audioSource.isPlaying)
+        if (audioSource.isPlaying && trackingBeats)
         {
             currentSample = (float)AudioSettings.dspTime * sampleRate;
 
@@ -86,5 +87,11 @@ public class MusicManager : MonoBehaviour
         Debug.Log("Start music");
         musicStartTimestamp = AudioSettings.dspTime + 2.0f;
         audioSource.PlayScheduled(musicStartTimestamp);
+        trackingBeats = true;
+    }
+
+    public void StopTrackingBeats()
+    {
+        trackingBeats = false;
     }
 }

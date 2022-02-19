@@ -12,6 +12,7 @@ public abstract class CreatureController2D : MonoBehaviour
     [SerializeField] protected MusicManager musicManager;
     [SerializeField] protected Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameObject invisibleWall;
     protected Direction selectedDirection;
 
     public enum Direction
@@ -68,6 +69,7 @@ public abstract class CreatureController2D : MonoBehaviour
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);
         if (!obstacles)
         {
+            invisibleWall.transform.localPosition = targetMovement;
             AdjustOrientation();
             StartCoroutine(Move(targetMovement));
         }
@@ -101,6 +103,7 @@ public abstract class CreatureController2D : MonoBehaviour
             transform.position = startPos + move * targetMovement;
             yield return null;
         }
+        invisibleWall.transform.localPosition = Vector3.zero;
     }
 
     protected Direction GetNextAvailableDirection() => selectedDirection switch
