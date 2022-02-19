@@ -7,6 +7,8 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController2D : CreatureController2D
 {
     [SerializeField] private LayerMask goalLayerMask;
+    [SerializeField] private float greatThreshold;
+    [SerializeField] private float okThreshold;
     
     public delegate void SelectDirectionDelegate(Direction direction);
     public delegate void ExecuteMoveDelegate(MoveQuality moveQuality);
@@ -76,5 +78,15 @@ public class PlayerController2D : CreatureController2D
         {
             base.ExecuteMove();
         }
+    }
+    
+    protected MoveQuality GetMovementQuality()
+    {
+        var distance = musicManager.GetDistanceToClosestBeatNormalized();
+        if (distance < greatThreshold)
+        {
+            return MoveQuality.Ace;
+        }
+        return distance < okThreshold ? MoveQuality.Ok : MoveQuality.Ko;
     }
 }

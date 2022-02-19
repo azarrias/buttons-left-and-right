@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController2D : MonoBehaviour
+public class EnemyController2D : CreatureController2D
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private PlayerController2D player;
+    
+    protected override void HandleUpdate()
     {
-        
+        PrepareMove();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void PrepareMove()
     {
         
     }

@@ -10,11 +10,9 @@ public abstract class CreatureController2D : MonoBehaviour
     private const string MOVE_LEFT_ANIMATION_PARAMETER = "MoveLeft";
 
     [SerializeField] private LayerMask obstaclesLayerMask;
-    [SerializeField] private MusicManager musicManager;
+    [SerializeField] protected MusicManager musicManager;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private float greatThreshold;
-    [SerializeField] private float okThreshold;
     protected Direction selectedDirection;
 
     public enum Direction
@@ -84,16 +82,6 @@ public abstract class CreatureController2D : MonoBehaviour
         Direction.Left => MOVE_LEFT_ANIMATION_PARAMETER,
         _ => throw new ArgumentOutOfRangeException(nameof(selectedDirection), $"Not expected direction value: {selectedDirection}")
     };
-
-    protected MoveQuality GetMovementQuality()
-    {
-        var distance = musicManager.GetDistanceToClosestBeatNormalized();
-        if (distance < greatThreshold)
-        {
-            return MoveQuality.Ace;
-        }
-        return distance < okThreshold ? MoveQuality.Ok : MoveQuality.Ko;
-    }
 
     protected virtual IEnumerator Move(Vector3 targetMovement)
     {
