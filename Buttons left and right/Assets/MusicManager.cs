@@ -23,26 +23,30 @@ public class MusicManager : MonoBehaviour
     private float samplePeriod;
     private float sampleOffset;
     private float currentSample;
-    private int audioSourceClipFrequency => audioSource.clip.frequency;
-    
+    private int sampleRate;
+
     // TODO - For debugging
     [SerializeField] private Image dotImage;
 
     private void Awake()
     {
+#if UNITY_ANDROID || UNITY_IOS
+        startingOffset += 0.1f;
+#endif
         beatPeriod = 60f / bpm;
-        samplePeriod = beatPeriod * audioSourceClipFrequency;
-        sampleOffset = startingOffset * audioSourceClipFrequency;
+        sampleRate = AudioSettings.outputSampleRate;
+        samplePeriod = beatPeriod * sampleRate;
+        sampleOffset = startingOffset * sampleRate;
         ScheduleMusic();
         lastBeatSample = 0f;
-        nextBeatSample = (float)musicStartTimestamp * audioSourceClipFrequency;
+        nextBeatSample = (float)musicStartTimestamp * sampleRate;
     }
     
     private void Update()
     {
         if (audioSource.isPlaying)
         {
-            currentSample = (float)AudioSettings.dspTime * audioSourceClipFrequency;
+            currentSample = (float)AudioSettings.dspTime * sampleRate;
 
             if (currentSample >= nextBeatSample + sampleOffset)
             {
