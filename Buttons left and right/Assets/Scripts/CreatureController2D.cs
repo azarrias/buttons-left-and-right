@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Vector3 = UnityEngine.Vector3;
 
-public class PlayerController2D : MonoBehaviour
+public abstract class CreatureController2D : MonoBehaviour
 {
     private const string MOVE_UP_ANIMATION_PARAMETER = "MoveUp";
     private const string MOVE_RIGHT_ANIMATION_PARAMETER = "MoveRight";
@@ -13,14 +10,12 @@ public class PlayerController2D : MonoBehaviour
     private const string MOVE_LEFT_ANIMATION_PARAMETER = "MoveLeft";
 
     [SerializeField] private LayerMask obstaclesLayerMask;
-    [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private MusicManager musicManager;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
     private Direction selectedDirection;
-    private bool facingDown = true;
 
     public delegate void SelectDirectionDelegate(Direction direction);
 
@@ -52,14 +47,12 @@ public class PlayerController2D : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_ANDROID || UNITY_IOS
-        HandleInputMobile();
-#else
-        HandleInput();
-#endif
+        HandleUpdate();
     }
 
-    private void SetSelectedDirection(Direction direction)
+    protected abstract void HandleUpdate();
+
+    protected void SetSelectedDirection(Direction direction)
     {
         selectedDirection = direction;
         OnSelectDirection?.Invoke(selectedDirection);
@@ -74,7 +67,7 @@ public class PlayerController2D : MonoBehaviour
         _ => throw new ArgumentOutOfRangeException(nameof(direction), $"Not expected direction value: {direction}")
     };
 
-    private void TryMove()
+    protected void TryMove()
     {
         if (selectedDirection == Direction.None)
         {
@@ -117,7 +110,7 @@ public class PlayerController2D : MonoBehaviour
         return distance < okThreshold ? MoveQuality.Ok : MoveQuality.Ko;
     }
 
-    IEnumerator Move(Vector3 targetMovement)
+    protected virtual IEnumerator Move(Vector3 targetMovement)
     {
         // TODO - Replace magic number with the duration of the moving animation
         var duration = 0.25f;
@@ -131,14 +124,9 @@ public class PlayerController2D : MonoBehaviour
             transform.position = startPos + move * targetMovement;
             yield return null;
         }
-        var goal = Physics2D.Linecast(transform.position, transform.position, goalLayerMask);
-        if (goal)
-        {
-            SceneManager.LoadScene(1);
-        }
     }
 
-    private Direction GetNextAvailableDirection() => selectedDirection switch
+    protected Direction GetNextAvailableDirection() => selectedDirection switch
     {
         Direction.None => Direction.Right,
         Direction.Right => Direction.Down,
@@ -156,28 +144,4 @@ public class PlayerController2D : MonoBehaviour
         Direction.Right => Vector3.right,
         _ => throw new ArgumentOutOfRangeException(nameof(direction), $"Not expected direction value: {direction}"),
     };
-
-    private void HandleInput()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            TryMove();
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            SetSelectedDirection(GetNextAvailableDirection());
-        }
-    }
-
-    private void HandleInputMobile()
-    {
-        if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x < Screen.width / 2f))
-        {
-            TryMove();
-        }
-        else if (Input.touches.Any(t => t.phase == TouchPhase.Began && t.position.x >= Screen.width / 2f))
-        {
-            SetSelectedDirection(GetNextAvailableDirection());
-        }
-    }
 }
