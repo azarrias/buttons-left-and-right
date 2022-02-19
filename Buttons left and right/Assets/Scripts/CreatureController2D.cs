@@ -59,6 +59,11 @@ public abstract class CreatureController2D : MonoBehaviour
 
     protected virtual void ExecuteMove()
     {
+        if (selectedDirection == Direction.None)
+        {
+            return;
+        }
+        
         var currentPosition = transform.position;
         var targetMovement = GetTargetMovement(selectedDirection);
         var obstacles = Physics2D.Linecast(currentPosition, currentPosition + targetMovement, obstaclesLayerMask);

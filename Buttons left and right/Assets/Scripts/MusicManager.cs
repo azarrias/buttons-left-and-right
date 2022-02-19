@@ -10,6 +10,10 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private float startingOffset;
     [SerializeField] private float bpm;
+
+    public delegate void Beat();
+    public event Beat OnBeat;
+    
     public AudioSource AudioSource => audioSource;
     public float Bpm => bpm;
     private int currentBeat;
@@ -50,6 +54,7 @@ public class MusicManager : MonoBehaviour
 
             if (currentSample >= nextBeatSample + sampleOffset)
             {
+                OnBeat?.Invoke();
                 StartCoroutine(PaintDebugCircle(0.2f));
                 lastBeatSample = nextBeatSample;
                 nextBeatSample += samplePeriod;

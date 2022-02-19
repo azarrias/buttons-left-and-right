@@ -11,8 +11,8 @@ public class PlayerController2D : CreatureController2D
     [SerializeField] private float okThreshold;
     
     public delegate void SelectDirectionDelegate(Direction direction);
-    public delegate void ExecuteMoveDelegate(MoveQuality moveQuality);
     public event SelectDirectionDelegate OnSelectDirection;
+    public delegate void ExecuteMoveDelegate(MoveQuality moveQuality);
     public event ExecuteMoveDelegate OnExecuteMove;
 
     protected override void HandleUpdate()
@@ -26,6 +26,10 @@ public class PlayerController2D : CreatureController2D
     
     private void HandleInput()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             ExecuteMove();
@@ -66,11 +70,6 @@ public class PlayerController2D : CreatureController2D
 
     protected override void ExecuteMove()
     {
-        if (selectedDirection == Direction.None)
-        {
-            return;
-        }
-
         var movementQuality = GetMovementQuality();
         OnExecuteMove?.Invoke(movementQuality);
 
