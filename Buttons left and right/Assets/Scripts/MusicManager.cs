@@ -86,7 +86,6 @@ public class MusicManager : MonoBehaviour
     
     private void ScheduleMusic()
     {
-        Debug.Log("Start music");
         musicStartTimestamp = AudioSettings.dspTime + 2.0f;
         audioSource.PlayScheduled(musicStartTimestamp);
         trackingBeats = true;
