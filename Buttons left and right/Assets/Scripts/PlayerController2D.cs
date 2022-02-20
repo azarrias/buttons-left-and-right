@@ -11,6 +11,7 @@ public class PlayerController2D : CreatureController2D
     [SerializeField] private LayerMask goalLayerMask;
     [SerializeField] private float greatThreshold;
     [SerializeField] private float okThreshold;
+    [SerializeField] private SceneLoader sceneLoader;
     private bool acceptInput;
     
     public delegate void SelectDirectionDelegate(Direction direction);
@@ -73,7 +74,7 @@ public class PlayerController2D : CreatureController2D
         var goal = Physics2D.Linecast(position, position, goalLayerMask);
         if (goal)
         {
-            SceneManager.LoadScene(1);
+            sceneLoader.LoadNextScene();
         }
     }
 
@@ -110,11 +111,11 @@ public class PlayerController2D : CreatureController2D
         animator.SetTrigger(DieAnimationParameter);
         musicManager.StopTrackingBeats();
         SetSelectedDirection(Direction.None);
-        Invoke(nameof(RestartLevel), 3f);
+        Invoke(nameof(RestartLevel), 1f);
     }
 
     private void RestartLevel()
     {
-        SceneManager.LoadScene(0);
+        sceneLoader.ReloadScene();
     }
 }
