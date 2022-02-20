@@ -40,8 +40,6 @@ public class MusicManager : MonoBehaviour
     {
 #if UNITY_ANDROID || UNITY_STANDALONE_WIN
         startingOffset += 0.15f;
-#elif UNITY_STANDALONE_OSX
-        startingOffset += 0.3f;
 #endif
         beatPeriod = 60f / bpm;
         sampleRate = AudioSettings.outputSampleRate;
