@@ -56157,6 +56157,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2526875942461528240, guid: c2ba950ddb01f4fbdb6e8755a6f53692, type: 3}
+      propertyPath: musicManager
+      value: 
+      objectReference: {fileID: 1286856670}
     - target: {fileID: 2526875942461528242, guid: c2ba950ddb01f4fbdb6e8755a6f53692, type: 3}
       propertyPath: m_Name
       value: SceneLoader
@@ -56491,7 +56495,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: bpm
-      value: 85
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8094047491651260860, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: dotImage
@@ -56516,7 +56520,7 @@ PrefabInstance:
     - target: {fileID: 8094047491651260861, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 1332c4ef8e7524b9b85d9f6a9ca0e89f, type: 3}
+      objectReference: {fileID: 8300000, guid: d362f4c643e3f45f488986cdddf6cb31, type: 3}
     - target: {fileID: 8094047491651260863, guid: bb82c21da9656471d94804956af606dc, type: 3}
       propertyPath: m_Name
       value: MusicManager
