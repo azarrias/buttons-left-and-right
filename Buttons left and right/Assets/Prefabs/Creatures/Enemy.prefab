@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesLayerMask:
     serializedVersion: 2
-    m_Bits: 1600
+    m_Bits: 5696
   musicManager: {fileID: 0}
   animator: {fileID: 8747002714901340640}
   spriteRenderer: {fileID: 4604316374407278181}
