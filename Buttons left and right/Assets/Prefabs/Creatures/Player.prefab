@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: -6342241245146142518, guid: fe92290bb2ac742c6b2e795e4077689d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
     m_Bits: 256
   greatThreshold: 0.1
   okThreshold: 0.2
+  sceneLoader: {fileID: 0}
 --- !u!95 &8747002714901340640
 Animator:
   serializedVersion: 3
