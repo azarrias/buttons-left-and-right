@@ -16,12 +16,12 @@ public class CreditsManager : MonoBehaviour
         "Thaleah fat font by\nTiny Worlds",
         "Minifantasy dungeon by\nKrishna Palacio",
         "Thanks for playing",
-        "...",
+        "... ... ... ...",
         "Okay, that's all",
-        "...",
+        "... ... ... ...",
         "You could go do the dishes, you know",
         "Or take your dog for a walk",
-        "...",
+        "... ... ... ...",
         "Turn your computer off and go to sleep"
     };
 

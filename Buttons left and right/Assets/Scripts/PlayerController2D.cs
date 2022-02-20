@@ -25,6 +25,16 @@ public class PlayerController2D : CreatureController2D
         acceptInput = true;
     }
     
+    private void OnEnable()
+    {
+        musicManager.OnMusicFinished += Die;
+    }
+
+    private void OnDisable()
+    {
+        musicManager.OnMusicFinished -= Die;
+    }
+    
     protected override void HandleUpdate()
     {
 #if UNITY_ANDROID || UNITY_IOS
@@ -111,11 +121,12 @@ public class PlayerController2D : CreatureController2D
         animator.SetTrigger(DieAnimationParameter);
         musicManager.StopTrackingBeats();
         SetSelectedDirection(Direction.None);
-        Invoke(nameof(RestartLevel), 1f);
+        Invoke(
+            SceneManager.GetActiveScene().buildIndex == 3 ?
+                nameof(LoadStartScene) :
+                nameof(ReloadScene), 1f);
     }
 
-    private void RestartLevel()
-    {
-        sceneLoader.ReloadScene();
-    }
+    private void LoadStartScene() => sceneLoader.LoadStartScene();
+    private void ReloadScene() => sceneLoader.ReloadScene();
 }

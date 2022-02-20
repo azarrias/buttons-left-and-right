@@ -13,6 +13,8 @@ public class MusicManager : MonoBehaviour
 
     public delegate void Beat();
     public event Beat OnBeat;
+    public delegate void MusicFinished();
+    public event MusicFinished OnMusicFinished;
     
     public AudioSource AudioSource => audioSource;
     public float Bpm => bpm;
@@ -29,6 +31,7 @@ public class MusicManager : MonoBehaviour
     private float currentSample;
     private int sampleRate;
     private bool trackingBeats;
+    private bool wasPlaying;
 
     // TODO - For debugging
     [SerializeField] private Image dotImage;
@@ -51,7 +54,19 @@ public class MusicManager : MonoBehaviour
     
     private void Update()
     {
-        if (audioSource.isPlaying && trackingBeats)
+        if (!audioSource.isPlaying)
+        {
+            if (wasPlaying && trackingBeats)
+            {
+                Debug.Log("Executing dis");
+                OnMusicFinished?.Invoke();
+            }
+            return;
+        }
+
+        wasPlaying = true;
+        
+        if (trackingBeats)
         {
             currentSample = (float)AudioSettings.dspTime * sampleRate;
 
